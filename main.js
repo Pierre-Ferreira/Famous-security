@@ -10,11 +10,10 @@ define(function(require, exports, module) {
     var Scrollview = require('famous/views/Scrollview');
     var Easing = require('famous/transitions/Easing');
     var Transform = require('famous/core/Transform');
-    var RenderNode = require('famous/core/RenderNode');
-    var Draggable = require('famous/modifiers/Draggable');
     var mainContext = Engine.createContext();
     var layout;
     var mainView = new View();
+    //Scrollviews initialization for Armed Response, Medical Emergency and Directory (Scrollviews must scroll horisontally)
     var scrollviewAR = new Scrollview({
         direction: 0,
         paginated: true
@@ -27,12 +26,14 @@ define(function(require, exports, module) {
         direction: 0,
         paginated: true
     });
+    //Function calls
     setBackground();
     createLayout();
     addHeader();
     addContent();
     addFooter();
     addLogos();
+    //Setup background of main view
     function setBackground() {
       var bgSurface = new Surface({
             properties: {
@@ -42,6 +43,7 @@ define(function(require, exports, module) {
        });
        mainView.add(bgSurface);
     }
+    //Setup header-footer layout
     function createLayout() {
       layout = new HeaderFooterLayout({
         headerSize: (50),
@@ -50,7 +52,7 @@ define(function(require, exports, module) {
       mainView.add(layout);
       mainContext.add(mainView);
     }
-
+    //Setup header of layout
     function addHeader() {
       layout.header.add(new Surface({
         content: 'Make a selection',
@@ -63,7 +65,7 @@ define(function(require, exports, module) {
         }
       }));
     }
-
+    //Setup footer of layout
     function addFooter() {
       layout.footer.add(new Surface({
         content: 'EPR Emergency App',
@@ -76,6 +78,7 @@ define(function(require, exports, module) {
         }
       }));
     }
+    //Add logos to footer of layout
     function addLogos() {
         var smallLogoSurface1 = new ImageSurface({
           content: 'content/images/EPR LOGO ICON SMALL2 VER 2.png',
@@ -105,19 +108,26 @@ define(function(require, exports, module) {
         mainContext.add(modifierFooterLimg).add(smallLogoSurface1);
         mainContext.add(modifierFooterRimg).add(smallLogoSurface2);
     }
+    //Add content to header-footer layout
     function addContent() {
-      layout.content.add(createMainScreen('', ''));
+      layout.content.add(createMainScreen(1, 3));
     }
-    function createMainScreen(section, gridDimensions) {
+    //Function that sets up scroll views
+    function createMainScreen(gridWidth, gridHeight) {
+      //Setup grid which will be the body of the header-footer layout
       var grid = new GridLayout({
-        dimensions: [1,3]
+        dimensions: [gridWidth,gridHeight]
       });
       var views = [];
+      //Add the array that will contain the scrollviews to the grid
       grid.sequenceFrom(views);
+      //Set the surface size of each scrollview (3 of) as a ratio of the header-footer body (grid area)
       var surfaceHeightRatios = window.innerHeight*.26;
       var surfacesAR = [];
+      //Add the array containing the Armed Response surfaces to the Armed Response scrollview
       scrollviewAR.sequenceFrom(surfacesAR);
       addSurfacesAR();
+      // Function that creates Armed Response surfaces
       function addSurfacesAR() {
         var viewAR1 = new View();
         var modifierAR1 = new Modifier({
@@ -177,6 +187,7 @@ define(function(require, exports, module) {
         });
         viewAR1.add(modifierRightGunLogo).add(surfaceRightGunLogo);
         viewAR1.add(modifierAR1).add(surfaceAR1);
+        //Setup event handler between surface and scroll view
         surfaceAR1.pipe(scrollviewAR);
         surfacesAR[0] = viewAR1;
         var viewAR2 = new View();
@@ -195,6 +206,7 @@ define(function(require, exports, module) {
          }
         });
         viewAR2.add(modifierAR2).add(surfaceAR2);
+        //Setup event handler between surface and scroll view
         surfaceAR2.pipe(scrollviewAR);
         surfacesAR[1] = viewAR2;
         var viewAR3 = new View();
@@ -211,6 +223,7 @@ define(function(require, exports, module) {
          }
         });
         viewAR3.add(modifierAR3).add(surfaceAR3);
+        //Setup event handler between surface and scroll view
         surfaceAR3.pipe(scrollviewAR);
         surfacesAR[2] = viewAR3;
       }
@@ -276,6 +289,7 @@ define(function(require, exports, module) {
         });
         viewMED1.add(modifierRightAmbulanceLogo).add(surfaceRightAmbulanceLogo);
         viewMED1.add(modifierMED1).add(surfaceMED1);
+        //Setup event handler between surface and scroll view
         surfaceMED1.pipe(scrollviewMED);
         surfacesMED[0] = viewMED1;
         var viewMED2 = new View();
@@ -294,6 +308,7 @@ define(function(require, exports, module) {
          }
         });
         viewMED2.add(modifierMED2).add(surfaceMED2);
+        //Setup event handler between surface and scroll view
         surfaceMED2.pipe(scrollviewMED);
         surfacesMED[1] = viewMED2;
         var viewMED3 = new View();
@@ -310,6 +325,7 @@ define(function(require, exports, module) {
          }
         });
         viewMED3.add(modifierMED3).add(surfaceMED3);
+        //Setup event handler between surface and scroll view
         surfaceMED3.pipe(scrollviewMED);
         surfacesMED[2] = viewMED3;
       }
@@ -365,9 +381,10 @@ define(function(require, exports, module) {
         var modifierZLevel = new Modifier({
             transform:Transform.translate(0,0,8)
         });
+        //Setup event handler between surface and scroll view
         surfaceOTHER1.pipe(scrollviewOTHER);
         viewOTHER1.add(modifierOTHER1).add(surfaceOTHER1);
- //       viewOTHER1.add(modifierZLevel).add(modifierInfoLogo).add(centerSpinModifier).add(surfaceInfoLogo);
+        viewOTHER1.add(modifierZLevel).add(modifierInfoLogo).add(centerSpinModifier).add(surfaceInfoLogo);
         surfacesOTHER[0] = viewOTHER1;
         var viewOTHER2 = new View();
         var modifierOTHER2 = new Modifier({
@@ -384,6 +401,7 @@ define(function(require, exports, module) {
         });
         viewOTHER2.add(modifierOTHER2).add(surfaceOTHER2);
 //        viewOTHER2.pipe(scrollviewOTHER); //DOES NOT WORK!!!
+        //Setup event handler between surface and scroll view
         surfaceOTHER2.pipe(scrollviewOTHER);
         surfacesOTHER[1] = viewOTHER2;
         var viewOTHER3 = new View();
@@ -400,6 +418,7 @@ define(function(require, exports, module) {
           }
         });
         viewOTHER3.add(modifierOTHER3).add(surfaceOTHER3);
+        //Setup event handler between surface and scroll view
         surfaceOTHER3.pipe(scrollviewOTHER);
         surfacesOTHER[2] = viewOTHER3;
         var viewOTHER4 = new View();
@@ -416,6 +435,7 @@ define(function(require, exports, module) {
           }
         });
         viewOTHER4.add(modifierOTHER4).add(surfaceOTHER4);
+        //Setup event handler between surface and scroll view
         surfaceOTHER4.pipe(scrollviewOTHER);
         surfacesOTHER[3] = viewOTHER4;
         var viewOTHER5 = new View();
@@ -432,15 +452,19 @@ define(function(require, exports, module) {
           }
         });
         viewOTHER5.add(modifierOTHER5).add(surfaceOTHER5);
+        //Setup event handler between surface and scroll view
         surfaceOTHER5.pipe(scrollviewOTHER);
         surfacesOTHER[4] = viewOTHER5;
       }
+      //Declaration of views
       var viewARMain = new View();
       var viewMEDMain = new View();
       var viewOTHERMain = new View();
+      //Add the scrollviews to views
       viewARMain.add(scrollviewAR);
       viewMEDMain.add(scrollviewMED);
       viewOTHERMain.add(scrollviewOTHER);
+      //Add the views containing the scrollviews to the views in the grids
       views[0]=(viewARMain);
       views[1]=(viewMEDMain);
       views[2]=(viewOTHERMain);
