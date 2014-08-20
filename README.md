@@ -1,4 +1,4 @@
 Famous-security
 ===============
 
-Security interface app created with Famo.us
+Security app interface created with Famo.us
